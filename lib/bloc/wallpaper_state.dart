@@ -1,0 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+part of 'wallpaper_bloc.dart';
+
+@immutable
+abstract class WallpaperState {}
+
+class WallpaperInitialState extends WallpaperState {}
+
+class WallpaperLoadingState extends WallpaperState {}
+
+class WallpaperLoadedState extends WallpaperState {
+  DataPhotoModel wallpaperModel;
+  WallpaperLoadedState({
+    required this.wallpaperModel,
+  });
+}
+
+class WallpaperErrorState extends WallpaperState {
+  String errorMsg;
+  WallpaperErrorState({
+    required this.errorMsg,
+  });
+}

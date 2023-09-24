@@ -21,3 +21,10 @@ class WallpaperErrorState extends WallpaperState {
     required this.errorMsg,
   });
 }
+
+class WallpaperInternetErrorState extends WallpaperState {
+  String errorMsg;
+  WallpaperInternetErrorState({
+    required this.errorMsg,
+  });
+}

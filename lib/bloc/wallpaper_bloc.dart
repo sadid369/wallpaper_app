@@ -20,7 +20,12 @@ class WallpaperBloc extends Bloc<WallpaperEvent, WallpaperState> {
         emit(
             WallpaperLoadedState(wallpaperModel: DataPhotoModel.fromJson(res)));
       } catch (e) {
-        emit(WallpaperErrorState(errorMsg: (e as MyException).myToString()));
+        if (e is FetchDataException) {
+          emit(WallpaperInternetErrorState(
+              errorMsg: (e as MyException).myToString()));
+        } else {
+          emit(WallpaperErrorState(errorMsg: (e as MyException).myToString()));
+        }
       }
     });
   }

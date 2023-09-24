@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.6
   flutter_bloc: ^8.1.3
+  lottie: ^2.3.2
+  liquid_pull_to_refresh: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +73,8 @@ flutter:
     - assets/images/street/
     - assets/images/sports/
     - assets/images/food/
+    - assets/animation/animation_interner_error.json
+    - assets/animation/animation_unauthorized_error.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

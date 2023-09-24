@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wallpaper_app/bloc/wallpaper_bloc.dart';
 import 'package:wallpaper_app/pages/animals.dart';
 import 'package:wallpaper_app/pages/film.dart';
@@ -7,6 +8,7 @@ import 'package:wallpaper_app/pages/flower.dart';
 import 'package:wallpaper_app/pages/food.dart';
 import 'package:wallpaper_app/pages/sports.dart';
 import 'package:wallpaper_app/pages/street_photography.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 import 'natural.dart';
 
@@ -110,302 +112,325 @@ class WallpaperPageState extends State<WallpaperPage> {
     context.read<WallpaperBloc>().add(GetTrendingWallpaper());
   }
 
+  Future<void> _handleReferesh() async {
+    return await Future.delayed(
+      Duration(milliseconds: 500),
+      () {
+        context.read<WallpaperBloc>().add(GetTrendingWallpaper());
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     listImage.shuffle();
     return SafeArea(
-      child: Scaffold(
-        // backgroundColor: Color.fromARGB(255, 46, 220, 255),
-        body: Stack(
-          //* Stack to take a Gradient Color
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xffE8D7DA),
-                    Color(0xffA0D3D6),
-                  ],
+      child: LiquidPullToRefresh(
+        onRefresh: _handleReferesh,
+        backgroundColor: Colors.pink[100],
+        color: Colors.pink[300],
+        child: Scaffold(
+          // backgroundColor: Color.fromARGB(255, 46, 220, 255),
+          body: Stack(
+            //* Stack to take a Gradient Color
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xffE8D7DA),
+                      Color(0xffA0D3D6),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 25.0),
-                      child: Container(
-                        //* Find the Wallpaper search box..
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.only(top: 30),
-                        decoration: BoxDecoration(
-                          color: const Color(0xffDBEBF1),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.grey,
-                              blurRadius: 8,
-                              spreadRadius: 1,
-                            )
-                          ],
-                        ),
-                        child: const TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Find Wallpaper..',
-                            hintStyle: TextStyle(
-                              color: Color.fromARGB(255, 152, 152, 152),
-                            ),
-                            suffixIcon: Icon(Icons.image_search),
-                            suffixIconColor: Color.fromARGB(255, 172, 172, 172),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDBEBF1),
+              SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 25.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 25.0),
+                        child: Container(
+                          //* Find the Wallpaper search box..
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(top: 30),
+                          decoration: BoxDecoration(
+                            color: const Color(0xffDBEBF1),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.grey,
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              )
+                            ],
+                          ),
+                          child: const TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Find Wallpaper..',
+                              hintStyle: TextStyle(
+                                color: Color.fromARGB(255, 152, 152, 152),
                               ),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color(0xffDBEBF1),
+                              suffixIcon: Icon(Icons.image_search),
+                              suffixIconColor:
+                                  Color.fromARGB(255, 172, 172, 172),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDBEBF1),
+                                ),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xffDBEBF1),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-
-                    //* Best if the Month Image
-                    const Text(
-                      'Best of the month',
-                      style: TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                        height: 300,
-                        child: BlocBuilder<WallpaperBloc, WallpaperState>(
-                          builder: (context, state) {
-                            if (state is WallpaperLoadingState) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (state is WallpaperErrorState) {
-                              return Center(
-                                child: Text(state.errorMsg),
-                              );
-                            } else if (state is WallpaperLoadedState) {
-                              return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: state.wallpaperModel.photos!.length,
-                                itemBuilder: (context, index) {
-                                  var eachWallaper =
-                                      state.wallpaperModel.photos![index];
-                                  return Container(
-                                    margin: const EdgeInsets.only(right: 20),
-                                    width: 200,
-                                    height: 200,
+
+                      //* Best if the Month Image
+                      const Text(
+                        'Best of the month',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                          height: 300,
+                          child: BlocBuilder<WallpaperBloc, WallpaperState>(
+                            builder: (context, state) {
+                              if (state is WallpaperLoadingState) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (state is WallpaperInternetErrorState) {
+                                return Center(
+                                    child: Lottie.asset(
+                                        "assets/animation/animation_interner_error.json"));
+                              } else if (state is WallpaperErrorState) {
+                                return Center(
+                                  child: state.errorMsg.contains("401")
+                                      ? Lottie.asset(
+                                          "assets/animation/animation_unauthorized_error.json")
+                                      : Text(state.errorMsg),
+                                );
+                              } else if (state is WallpaperLoadedState) {
+                                return ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      state.wallpaperModel.photos!.length,
+                                  itemBuilder: (context, index) {
+                                    var eachWallaper =
+                                        state.wallpaperModel.photos![index];
+                                    return Container(
+                                      margin: const EdgeInsets.only(right: 20),
+                                      width: 200,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                            eachWallaper.src!.portrait!,
+                                          ),
+                                        ),
+                                      ),
+                                      // child: Image.asset(listImage[index]),
+                                    );
+                                  },
+                                );
+                              }
+                              return Container();
+                            },
+                          )),
+                      const SizedBox(
+                        height: 30,
+                      ),
+
+                      //* Color List
+
+                      const Text(
+                        'The color tone',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: listColor.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.only(right: 10),
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: listColor[index],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      //* All Category
+
+                      const Text(
+                        'Categories',
+                        style: TextStyle(
+                          fontSize: 21,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        height: 500,
+                        padding: const EdgeInsets.only(right: 5),
+                        child: GridView.builder(
+                          itemCount: categoriesName.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 16 / 9,
+                          ),
+                          itemBuilder: (Context, index) {
+                            return InkWell(
+                              onTap: () {
+                                if (index == 0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Natural(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 1) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Flower(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 2) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Sports(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 3) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Film(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 4) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => StreetPhotography(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 5) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Animals(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                } else if (index == 6) {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => Scaffold(
+                                  //       appBar: AppBar(
+                                  //         title: categoriesName[index]['name'],
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // );
+                                } else if (index == 7) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Food(
+                                        title: categoriesName[index]['name'],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.only(
+                                      right: 15,
+                                      bottom: 10,
+                                    ),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(10),
                                       image: DecorationImage(
                                         fit: BoxFit.cover,
-                                        image: NetworkImage(
-                                          eachWallaper.src!.portrait!,
+                                        image: AssetImage(
+                                          categoriesName[index]["img_cat"],
                                         ),
                                       ),
                                     ),
-                                    // child: Image.asset(listImage[index]),
-                                  );
-                                },
-                              );
-                            }
-                            return Container();
-                          },
-                        )),
-                    const SizedBox(
-                      height: 30,
-                    ),
-
-                    //* Color List
-
-                    const Text(
-                      'The color tone',
-                      style: TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: listColor.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: listColor[index],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    //* All Category
-
-                    const Text(
-                      'Categories',
-                      style: TextStyle(
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 500,
-                      padding: const EdgeInsets.only(right: 5),
-                      child: GridView.builder(
-                        itemCount: categoriesName.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 16 / 9,
-                        ),
-                        itemBuilder: (Context, index) {
-                          return InkWell(
-                            onTap: () {
-                              if (index == 0) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Natural(
-                                      title: categoriesName[index]['name'],
-                                    ),
                                   ),
-                                );
-                              } else if (index == 1) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Flower(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              } else if (index == 2) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Sports(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              } else if (index == 3) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Film(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              } else if (index == 4) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => StreetPhotography(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              } else if (index == 5) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Animals(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              } else if (index == 6) {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => Scaffold(
-                                //       appBar: AppBar(
-                                //         title: categoriesName[index]['name'],
-                                //       ),
-                                //     ),
-                                //   ),
-                                // );
-                              } else if (index == 7) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Food(
-                                      title: categoriesName[index]['name'],
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                    right: 15,
-                                    bottom: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                        categoriesName[index]["img_cat"],
+                                  Center(
+                                    child: Text(
+                                      categoriesName[index]['name'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    categoriesName[index]['name'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    )
-                  ],
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

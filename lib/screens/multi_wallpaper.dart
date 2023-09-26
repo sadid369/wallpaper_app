@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_app/bloc/wallpaper_bloc.dart';
+import 'package:wallpaper_app/screens/wallpaper.dart';
 import 'package:wallpaper_app/screens/wallpaper_list/bloc/wallpaper_list_bloc.dart';
 
 class MultiWallpaper extends StatefulWidget {
@@ -98,16 +99,28 @@ class _MultiWallpaperState extends State<MultiWallpaper> {
                                 childAspectRatio: 9 / 16,
                               ),
                               itemBuilder: (context, index) {
-                                return Container(
-                                  width: 150,
-                                  height: 300,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: NetworkImage(
-                                        state.wallpaperModel.photos![index].src!
-                                            .portrait!,
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) {
+                                        return WallpaperDetailsPage(
+                                            imgUrl: state.wallpaperModel
+                                                .photos![index].src!.portrait!);
+                                      },
+                                    ));
+                                  },
+                                  child: Container(
+                                    width: 150,
+                                    height: 300,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: NetworkImage(
+                                          state.wallpaperModel.photos![index]
+                                              .src!.portrait!,
+                                        ),
                                       ),
                                     ),
                                   ),

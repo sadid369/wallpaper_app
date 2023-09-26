@@ -10,6 +10,7 @@ import 'package:wallpaper_app/pages/sports.dart';
 import 'package:wallpaper_app/pages/street_photography.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:wallpaper_app/screens/multi_wallpaper.dart';
+import 'package:wallpaper_app/screens/wallpaper.dart';
 
 import 'natural.dart';
 
@@ -235,20 +236,37 @@ class WallpaperPageState extends State<WallpaperPage> {
                                   itemBuilder: (context, index) {
                                     var eachWallaper =
                                         state.wallpaperModel.photos![index];
-                                    return Container(
-                                      margin: const EdgeInsets.only(right: 20),
-                                      width: 200,
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(
-                                            eachWallaper.src!.portrait!,
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context)
+                                            .push(MaterialPageRoute(
+                                          builder: (context) {
+                                            return WallpaperDetailsPage(
+                                                imgUrl: state
+                                                    .wallpaperModel
+                                                    .photos![index]
+                                                    .src!
+                                                    .portrait!);
+                                          },
+                                        ));
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 20),
+                                        width: 200,
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(
+                                              eachWallaper.src!.portrait!,
+                                            ),
                                           ),
                                         ),
+                                        // child: Image.asset(listImage[index]),
                                       ),
-                                      // child: Image.asset(listImage[index]),
                                     );
                                   },
                                 );

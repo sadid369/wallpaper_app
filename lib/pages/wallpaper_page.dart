@@ -333,81 +333,12 @@ class WallpaperPageState extends State<WallpaperPage> {
                           itemBuilder: (Context, index) {
                             return InkWell(
                               onTap: () {
-                                if (index == 0) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Natural(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 1) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Flower(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 2) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Sports(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 3) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Film(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 4) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => StreetPhotography(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 5) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Animals(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                } else if (index == 6) {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => Scaffold(
-                                  //       appBar: AppBar(
-                                  //         title: categoriesName[index]['name'],
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // );
-                                } else if (index == 7) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Food(
-                                        title: categoriesName[index]['name'],
-                                      ),
-                                    ),
-                                  );
-                                }
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return MultiWallpaper(
+                                        mQuery: categoriesName[index]['name']);
+                                  },
+                                ));
                               },
                               child: Stack(
                                 children: [

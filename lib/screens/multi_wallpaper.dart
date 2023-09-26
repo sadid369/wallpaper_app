@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wallpaper_app/bloc/wallpaper_bloc.dart';
+import 'package:wallpaper_app/screens/wallpaper_list/bloc/wallpaper_list_bloc.dart';
 
 class MultiWallpaper extends StatefulWidget {
   String mQuery;
-  MultiWallpaper({
-    Key? key,
-    required this.mQuery,
-  }) : super(key: key);
+  String? mColor;
+  MultiWallpaper({Key? key, required this.mQuery, this.mColor})
+      : super(key: key);
 
   @override
   _MultiWallpaperState createState() => _MultiWallpaperState();
@@ -36,7 +36,8 @@ class _MultiWallpaperState extends State<MultiWallpaper> {
   @override
   void initState() {
     super.initState();
-    context.read<WallpaperBloc>().add(GetSearchWallpaper(query: widget.mQuery));
+    context.read<WallpaperListBloc>().add(GetSearchWallpaper(
+        query: widget.mQuery.replaceAll(" ", "%20"), mColor: widget.mColor));
   }
 
   @override
@@ -60,17 +61,18 @@ class _MultiWallpaperState extends State<MultiWallpaper> {
               SizedBox(
                 height: 10,
               ),
-              Expanded(child: BlocBuilder<WallpaperBloc, WallpaperState>(
+              Expanded(
+                  child: BlocBuilder<WallpaperListBloc, WallpaperListState>(
                 builder: (context, state) {
-                  if (state is WallpaperLoadingState) {
+                  if (state is WallpaperListLoadingState) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
-                  } else if (state is WallpaperErrorState) {
+                  } else if (state is WallpaperListErrorState) {
                     return Center(
                       child: Text(state.errorMsg),
                     );
-                  } else if (state is WallpaperLoadedState) {
+                  } else if (state is WallpaperListLoadedState) {
                     if (state.wallpaperModel.photos!.isNotEmpty) {
                       return Column(
                         children: [

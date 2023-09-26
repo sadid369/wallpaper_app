@@ -40,27 +40,13 @@ class WallpaperPageState extends State<WallpaperPage> {
   ];
 
   List listColor = [
-    Colors.blueAccent[400],
-    Colors.redAccent[400],
-    Colors.greenAccent[400],
-    Colors.amber,
-    Colors.deepOrange,
-    Colors.amberAccent,
-    Colors.black,
-    Colors.blue,
-    Colors.blueGrey,
-    Colors.brown,
-    Colors.cyan,
-    Colors.deepOrange,
-    Colors.orange,
-    Colors.deepPurple,
-    Colors.indigo,
-    Colors.purple,
-    Colors.lightBlue,
-    Colors.pink,
-    Colors.lime,
-    Colors.teal,
-    Colors.tealAccent
+    {"color": Colors.blue, "code": "2196F3"},
+    {"color": Colors.deepOrange, "code": "FF5722"},
+    {"color": Colors.black, "code": "000000"},
+    {"color": Colors.white, "code": "ffffff"},
+    {"color": Colors.blue, "code": "blue"},
+    {"color": Colors.green, "code": "4CAF50"},
+    {"color": Colors.yellow, "code": "FFEB3B"},
   ];
 
   List<Map<String, dynamic>> categoriesName = [
@@ -123,6 +109,8 @@ class WallpaperPageState extends State<WallpaperPage> {
   }
 
   var queryController = TextEditingController();
+  var searchQuery = 'nature';
+  var searchColorTone = "";
 
   @override
   Widget build(BuildContext context) {
@@ -290,13 +278,27 @@ class WallpaperPageState extends State<WallpaperPage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: listColor.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.only(right: 10),
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: listColor[index],
-                                borderRadius: BorderRadius.circular(10),
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) {
+                                    return MultiWallpaper(
+                                      mQuery: queryController.text.isNotEmpty
+                                          ? queryController.text.toString()
+                                          : searchQuery,
+                                      mColor: listColor[index]['code'],
+                                    );
+                                  },
+                                ));
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: listColor[index]['color'],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
                             );
                           },

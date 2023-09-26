@@ -9,6 +9,7 @@ import 'package:wallpaper_app/pages/food.dart';
 import 'package:wallpaper_app/pages/sports.dart';
 import 'package:wallpaper_app/pages/street_photography.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:wallpaper_app/screens/multi_wallpaper.dart';
 
 import 'natural.dart';
 
@@ -121,6 +122,8 @@ class WallpaperPageState extends State<WallpaperPage> {
     );
   }
 
+  var queryController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     listImage.shuffle();
@@ -167,13 +170,25 @@ class WallpaperPageState extends State<WallpaperPage> {
                               )
                             ],
                           ),
-                          child: const TextField(
+                          child: TextField(
+                            controller: queryController,
                             decoration: InputDecoration(
                               hintText: 'Find Wallpaper..',
                               hintStyle: TextStyle(
                                 color: Color.fromARGB(255, 152, 152, 152),
                               ),
-                              suffixIcon: Icon(Icons.image_search),
+                              suffixIcon: InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) {
+                                        return MultiWallpaper(
+                                            mQuery: queryController.text
+                                                .toString());
+                                      },
+                                    ));
+                                  },
+                                  child: Icon(Icons.image_search)),
                               suffixIconColor:
                                   Color.fromARGB(255, 172, 172, 172),
                               enabledBorder: UnderlineInputBorder(

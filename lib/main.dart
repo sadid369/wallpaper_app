@@ -27,6 +27,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Wallpaper App',
         theme: ThemeData(primaryColor: Colors.deepPurple),
-        home: ScrollListPage());
+        home: SplashScreen());
   }
 }
